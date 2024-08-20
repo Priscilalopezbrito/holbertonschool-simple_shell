@@ -27,16 +27,6 @@ Implementing correct behavior for process creation and management using `fork`, 
 ### Error Handling
 Ensuring that the shell gracefully handles errors, such as command not found or invalid syntax, required meticulous attention to detail.
 
-## Future Features
-### Advanced Command Handling
-Support for pipes, redirections, and more complex command structures.
-
-### Custom Built-ins
-Implement additional built-in commands to extend the shell's functionality.
-
-### Interactive Features
-Enhance the user interface with features like command history and auto-completion.
-
 ## Learning Objectives
 By the end of this project, I will be able to:
 
