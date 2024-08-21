@@ -10,7 +10,7 @@ void execute(char *command, char *prog_name)
 
 	av[0] = command;
 	av[1] = NULL;
-	if (execve(command, av, environ) == -1)
+	if (execve(command, av, environ) == -1)/*13-16 add issaty to handle*/
 	{
 		perror(prog_name);
 	}
@@ -37,7 +37,7 @@ char *read_line(void)
 		free(command);
 		return (NULL);
 	}
-	command[strcspn(command, "\n")] = 0;
+	command[_strcspn(command, "\n")] = 0;
 	return (command);
 }
 
@@ -52,7 +52,7 @@ void fork_execute(char *command, char *prog_name)
 	int status;
 
 	pid = fork();
-	if (pid < 0)
+	if (pid == -1)
 	{
 		perror("Error");
 		free(command);
@@ -68,4 +68,23 @@ void fork_execute(char *command, char *prog_name)
 	{
 		waitpid(pid, &status, 0);
 	}
+}
+
+
+size_t _strcspn(const char *s1, const char *s2)
+{
+	size_t ret = 0;
+
+	while (*s1)
+	{
+		if(strchr(s2,*s1))
+		{
+			return (ret);
+		}
+		else
+		{
+			s1++,ret++;
+		}
+	}
+	return (ret);
 }
