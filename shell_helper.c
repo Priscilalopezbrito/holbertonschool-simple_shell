@@ -12,18 +12,7 @@ void execute(char *command, char *prog_name)
 	av[1] = NULL;
 	if (execve(command, av, environ) == -1)
 	{
-		if (errno == ENOENT)
-		{
-			fprintf(stderr, "%s: No such file or directory\n", prog_name);
-		}
-		else if (errno == EACCES)
-		{
-			perror(prog_name);
-		}
-		else
-		{
-			perror(prog_name);
-		}
+		perror(prog_name);
 	}
 }
 
@@ -39,7 +28,7 @@ char *read_line(void)
 
 	if (isatty(STDIN_FILENO))
 	{
-		printf("$ ");
+		printf("#cisfun$ ");
 		fflush(stdout);
 	}
 	getinput = getline(&command, &len, stdin);
@@ -77,6 +66,6 @@ void fork_execute(char *command, char *prog_name)
 	}
 	else /*parent*/
 	{
-		wait(&status);
+		waitpid(pid, &status, 0);
 	}
 }

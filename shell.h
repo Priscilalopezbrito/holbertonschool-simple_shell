@@ -1,5 +1,7 @@
 #ifndef SHELL
-#define SHELL 1024
+#define SHELL
+
+#define MAX 1024
 
 #include <stdio.h>
 #include <stdlib.h>
