@@ -14,6 +14,11 @@ void execute(char *command, char *prog_name)
 	{
 		if (isatty(STDIN_FILENO))
 		{
+			fprintf(stderr, "%s: %s: ", prog_name, command);
+			perror("");
+		}
+		else
+		{
 			perror(prog_name);
 		}
 	}
@@ -73,20 +78,25 @@ void fork_execute(char *command, char *prog_name)
 	}
 }
 
-
+/**
+ * _strcspn- custom strcspn function
+ * @s1: string
+ * @s2: string
+ * Return: ret
+ */
 size_t _strcspn(const char *s1, const char *s2)
 {
 	size_t ret = 0;
 
 	while (*s1)
 	{
-		if(strchr(s2,*s1))
+		if (strchr(s2, *s1))
 		{
 			return (ret);
 		}
 		else
 		{
-			s1++,ret++;
+			s1++, ret++;
 		}
 	}
 	return (ret);
