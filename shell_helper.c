@@ -12,7 +12,10 @@ void execute(char *command, char *prog_name)
 	av[1] = NULL;
 	if (execve(command, av, environ) == -1)/*13-16 add issaty to handle*/
 	{
-		perror(prog_name);
+		if (isatty(STDIN_FILENO))
+		{
+			perror(prog_name);
+		}
 	}
 }
 
