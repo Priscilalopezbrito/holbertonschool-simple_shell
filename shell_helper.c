@@ -69,7 +69,7 @@ void fork_execute(char *command, char *prog_name)
 	else if (pid == 0)/*child*/
 	{
 		execute(command, prog_name);
-		free(command);
+		/*free(command);*/
 		exit(EXIT_FAILURE);
 	}
 	else /*parent*/
