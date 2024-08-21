@@ -16,6 +16,10 @@ void execute(char *command, char *prog_name)
 		{
 			perror(prog_name);
 		}
+		else
+		{
+			perror(prog_name);
+		}
 	}
 }
 
