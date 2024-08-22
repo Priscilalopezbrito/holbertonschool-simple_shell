@@ -127,9 +127,5 @@ void exec_commands(char *command, char *prog_name)
 	{
 		fork_execute(args, prog_name);
 	}
-	else
-	{
-		fprintf(stderr, "%s: Command not found\n", prog_name);
-	}
 }
 
