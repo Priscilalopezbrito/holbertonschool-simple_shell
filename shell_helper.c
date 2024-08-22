@@ -108,24 +108,46 @@ size_t _strcspn(const char *s1, const char *s2)
 
 void exec_commands(char *command, char *prog_name)
 {
-	char *token;
-	char *delim = "\n ";
-	char *args[100];
+	char *args[MAX];
 	int i = 0;
+	char *token;
+	char *path;
 
-	token = strtok(command, delim);
-	while (token != NULL)
+	token = strtok(command, " ");
+	while (token != NULL && i < MAX - 1)
 	{
-		if (strlen(token) > 0)
-		{
-			args[i++] = token;
-		}
-		token = strtok(NULL, delim);
+		args[i++] = token;
+		token = strtok(NULL, " ");
 	}
-	args[i] = NULL; /*end of array*/
+	args[i] = NULL;
 	if (args[0] != NULL)
 	{
-		fork_execute(args, prog_name);
+		if (args[0][0] == '/' || args[0][0] == '.')
+		{
+			path = args[0];
+		}
+		else
+		{
+			path = find_in_path(args[0]);
+		}
+		if (path != NULL && access(path, X_OK) == 0)
+		{
+			args[0] = path;
+			fork_execute(args, prog_name);
+			if (path != args[0])
+			{
+				free(path); /* Free if path_cmd was allocated by find_in_path */
+			}
+		}
+		else
+		{
+			fprintf(stderr, "%s: Command not found\n", args[0]);
+			if (path != args[0] && path != NULL)
+			{
+				free(path); /* Free if path_cmd was allocated but not used */
+			}
+		}
 	}
 }
+
 
