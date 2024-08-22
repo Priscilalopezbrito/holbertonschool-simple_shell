@@ -117,10 +117,10 @@ void exec_commands(char *command, char *prog_name)
 
 	path = malloc(700 * sizeof(char));
 	if (path == NULL)
-    {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
 	token = strtok(command, delim);
 	while (token != NULL && argc < 99)
 	{
