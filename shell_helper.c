@@ -5,11 +5,6 @@
 * @args: command
 * @prog_name: name
 **/
-/**
-* execute- executes a command using execve
-* @args: command
-* @prog_name: name
-**/
 void execute(char **args, char *prog_name)
 {
 	if (execve(args[0], args, environ) == -1)
