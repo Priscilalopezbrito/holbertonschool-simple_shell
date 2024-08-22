@@ -45,7 +45,7 @@ char *read_line(void)
 		free(command);
 		exit(0);
 	}
-	command[_strcspn(command, "\n")] = 0;
+	command[strcspn(command, "\n")] = 0;
 	return (command);
 }
 
@@ -75,31 +75,6 @@ void fork_execute(char **args, char *prog_name)
 	}
 }
 
-/**
- * _strcspn- custom strcspn function
- * finds the first occurrence of
- * any character in s2 in the string s1
- * @s1: string
- * @s2: string
- * Return: ret
- */
-size_t _strcspn(const char *s1, const char *s2)
-{
-	size_t ret = 0;
-
-	while (*s1)
-	{
-		if (strchr(s2, *s1))
-		{
-			return (ret);
-		}
-		else
-		{
-			s1++, ret++;
-		}
-	}
-	return (ret);
-}
 
 /**
  * exec_commands- Tokenizes a command string into

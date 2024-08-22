@@ -23,7 +23,7 @@ int main(int ac __attribute__((unused)), char **av)
 			free(command);
 			continue;
 		}
-		exec_commands(command,av[0]);/* multiple commands */
+		exec_commands(command, av[0]);/* multiple commands */
 		free(command);
 	}
 	if (isatty(STDIN_FILENO))
