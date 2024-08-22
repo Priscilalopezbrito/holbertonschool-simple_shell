@@ -9,7 +9,7 @@
 #include <sys/wait.h>
 
 #define MAX 100
-#define BUFFER 1024
+
 
 extern char **environ;
 void execute(char **args, char *prog_name);

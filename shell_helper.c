@@ -110,12 +110,17 @@ size_t _strcspn(const char *s1, const char *s2)
 
 void exec_commands(char *command, char *prog_name)
 {
-	char *token;
+	char *token, *args[100];
 	char *delim = "\n\t\r ";
-	char *args[100];
 	int argc = 0;
-	char path[700];
+	char *path;
 
+	path = malloc(700 * sizeof(char));
+	if (path == NULL)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
 	token = strtok(command, delim);
 	while (token != NULL && argc < 99)
 	{
@@ -126,9 +131,16 @@ void exec_commands(char *command, char *prog_name)
 		token = strtok(NULL, delim);
 	}
 	args[argc] = NULL;/*end of array*/
+	if (args[0] != NULL && strcmp(args[0], "exit") == 0)/**/
+	{
+		free(command);
+		free(path);
+		exit(0);
+	}
 	prepare_command(args, path);
 	if (args[0] != NULL)
 	{
 		fork_execute(args, prog_name);
 	}
+	free(path);
 }
