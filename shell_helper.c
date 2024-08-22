@@ -113,6 +113,10 @@ void exec_commands(char *command, char *prog_name)
 	char *token;
 	char *path;
 
+	while (*command == ' ' || *command == '\t' || *command == '\n')
+		command++;
+	if (*command == 0)
+		return;
 	token = strtok(command, " ");
 	while (token != NULL && i < MAX - 1)
 	{
@@ -122,30 +126,24 @@ void exec_commands(char *command, char *prog_name)
 	args[i] = NULL;
 	if (args[0] != NULL)
 	{
-		if (args[0][0] == '/' || args[0][0] == '.')
-		{
-			path = args[0];
-		}
-		else
+		if (strchr(args[0], '/') == NULL)
 		{
 			path = find_in_path(args[0]);
 		}
+		else
+			path = args[0];
 		if (path != NULL && access(path, X_OK) == 0)
 		{
 			args[0] = path;
 			fork_execute(args, prog_name);
 			if (path != args[0])
-			{
 				free(path); /* Free if path_cmd was allocated by find_in_path */
-			}
 		}
 		else
 		{
 			fprintf(stderr, "%s: Command not found\n", args[0]);
 			if (path != args[0] && path != NULL)
-			{
 				free(path); /* Free if path_cmd was allocated but not used */
-			}
 		}
 	}
 }

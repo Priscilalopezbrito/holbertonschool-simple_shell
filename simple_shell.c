@@ -36,20 +36,20 @@ int main(int ac __attribute__((unused)), char **av)
 /**
  * find_in_path- path
  * @filename: filename
- * Return: char *
+i * Return: char *
  */
 char *find_in_path(char *filename)
 {
 	char *token;
 	char full_path[BUFFER];
 	char *path = get_path_env();
-	char *path_copy = strdup(path);
+	char *path_copy;
 
-	if (path == NULL)
+	if (path == NULL || strlen(path) == 0)
 	{
-		fprintf(stderr, "Error: PATH environment variable not found.\n");
 		return (NULL);
 	}
+	path_copy = strdup(path);
 	if (path_copy == NULL)
 	{
 		fprintf(stderr, "Error: Memory allocation failed.\n");
@@ -70,6 +70,10 @@ char *find_in_path(char *filename)
 	return (NULL);
 }
 
+/**
+ * get_path_env- path
+ * Return: env
+ */
 char *get_path_env(void)
 {
 	char **env;
@@ -81,5 +85,5 @@ char *get_path_env(void)
 			return (*env + 5);
 		}
 	}
-	return NULL;
+	return (NULL);
 }
