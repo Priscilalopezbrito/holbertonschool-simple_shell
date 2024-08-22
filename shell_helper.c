@@ -5,13 +5,18 @@
 * @args: command
 * @prog_name: name
 **/
+/**
+* execute- executes a command using execve
+* @args: command
+* @prog_name: name
+**/
 void execute(char **args, char *prog_name)
 {
 	if (execve(args[0], args, environ) == -1)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			perror(prog_name);
+			fprintf(stderr, "%s: %s: not found\n", prog_name, args[0]);
 		}
 		else
 		{
