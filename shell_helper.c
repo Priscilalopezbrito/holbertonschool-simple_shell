@@ -1,6 +1,6 @@
 #include "shell.h"
 /**
- * execute- execve
+ * execute- executes a command using execve
  * @args: command
  * @prog_name: name
  **/
@@ -21,7 +21,7 @@ void execute(char **args, char *prog_name)
 
 
 /**
- * read_line- imput
+ * read_line- reads user input
  * Return: command
  **/
 char *read_line(void)
@@ -50,7 +50,7 @@ char *read_line(void)
 }
 
 /**
- * fork_execute- fork process
+ * fork_execute- fork process to execute command
  * @args: command
  * @prog_name: program name
  **/
@@ -77,6 +77,8 @@ void fork_execute(char **args, char *prog_name)
 
 /**
  * _strcspn- custom strcspn function
+ * finds the first occurrence of
+ * any character in s2 in the string s1
  * @s1: string
  * @s2: string
  * Return: ret
@@ -100,52 +102,33 @@ size_t _strcspn(const char *s1, const char *s2)
 }
 
 /**
- * exec_commands- handles multiple commands
- * separated by spaces or newline
+ * exec_commands- Tokenizes a command string into
+ * individual arguments using spaces or newlines as delimiters
  * @command: command
  * @prog_name: name
  */
 
 void exec_commands(char *command, char *prog_name)
 {
-	char *args[MAX];
-	int i = 0;
 	char *token;
-	char *path;
+	char *delim = "\n\t\r ";
+	char *args[100];
+	int argc = 0;
+	char path[700];
 
-	while (*command == ' ' || *command == '\t' || *command == '\n')
-		command++;
-	if (*command == 0)
-		return;
-	token = strtok(command, " ");
-	while (token != NULL && i < MAX - 1)
+	token = strtok(command, delim);
+	while (token != NULL && argc < 99)
 	{
-		args[i++] = token;
-		token = strtok(NULL, " ");
+		if (strlen(token) > 0)
+		{
+			args[argc++] = token;
+		}
+		token = strtok(NULL, delim);
 	}
-	args[i] = NULL;
+	args[argc] = NULL;/*end of array*/
+	prepare_command(args, path);
 	if (args[0] != NULL)
 	{
-		if (strchr(args[0], '/') == NULL)
-		{
-			path = find_in_path(args[0]);
-		}
-		else
-			path = args[0];
-		if (path != NULL && access(path, X_OK) == 0)
-		{
-			args[0] = path;
-			fork_execute(args, prog_name);
-			if (path != args[0])
-				free(path); /* Free if path_cmd was allocated by find_in_path */
-		}
-		else
-		{
-			fprintf(stderr, "%s: Command not found\n", args[0]);
-			if (path != args[0] && path != NULL)
-				free(path); /* Free if path_cmd was allocated but not used */
-		}
+		fork_execute(args, prog_name);
 	}
 }
-
-

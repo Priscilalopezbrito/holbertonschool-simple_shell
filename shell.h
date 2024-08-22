@@ -17,7 +17,9 @@ char *read_line(void);
 void fork_execute(char **args, char *prog_name);
 size_t _strcspn(const char *s1, const char *s2);
 void exec_commands(char *command, char *prog_name);
-char *find_in_path(char *filename);
-char *get_path_env(void);
+void print_env(void);
+char *find_command(char *command);
+void exec_commands(char *command, char *prog_name);
+void prepare_command(char *args[], char *path);
 
 #endif

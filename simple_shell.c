@@ -33,57 +33,34 @@ int main(int ac __attribute__((unused)), char **av)
 	return (0);
 }
 
-/**
- * find_in_path- path
- * @filename: filename
-i * Return: char *
- */
-char *find_in_path(char *filename)
-{
-	char *token;
-	char full_path[BUFFER];
-	char *path = get_path_env();
-	char *path_copy;
 
-	if (path == NULL || strlen(path) == 0)
+/**
+ * print_env- Prints environment variables
+ */
+
+
+void print_env(void)
+{
+	char **env = environ;
+
+	while (*env)
 	{
-		return (NULL);
+		printf("%s\n", *env);
+		env++;
 	}
-	path_copy = strdup(path);
-	if (path_copy == NULL)
-	{
-		fprintf(stderr, "Error: Memory allocation failed.\n");
-		return (NULL);
-	}
-	token = strtok(path_copy, ":");
-	while (token != NULL)
-	{
-		sprintf(full_path, "%s/%s", token, filename);
-		if (access(full_path, X_OK) == 0)
-		{
-			free(path_copy);
-			return (strdup(full_path));
-		}
-		token = strtok(NULL, ":");
-	}
-	free(path_copy);
-	return (NULL);
 }
 
 /**
- * get_path_env- path
- * Return: env
+ * prepare_command - funcion
+ * @args: args
+ * @path: path
  */
-char *get_path_env(void)
-{
-	char **env;
 
-	for (env = environ; *env != NULL; env++)
+void prepare_command(char *args[], char *path)
+{
+	if (strchr(args[0], '/') == NULL)
 	{
-		if (strncmp(*env, "PATH=", 5) == 0)
-		{
-			return (*env + 5);
-		}
+		sprintf(path, "/bin/%s", args[0]);
+		args[0] = path;
 	}
-	return (NULL);
 }
