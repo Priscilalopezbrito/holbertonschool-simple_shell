@@ -107,13 +107,15 @@ int tokenize_command(char *command, char **args)
 * @command: command
 * @prog_name: name
 */
+/**
+* exec_commands- executes a command
+* @command: command
+* @prog_name: name
+*/
 void exec_commands(char *command, char *prog_name)
 {
 	char *args[100];
-
 	char *path;
-
-	int argc;
 
 	path = malloc(700 * sizeof(char));
 	if (path == NULL)
@@ -121,7 +123,7 @@ void exec_commands(char *command, char *prog_name)
 		perror("malloc");
 		exit(EXIT_FAILURE);
 	}
-	argc = tokenize_command(command, args);
+	tokenize_command(command, args);
 	if (args[0] != NULL && strcmp(args[0], "exit") == 0)/**/
 	{
 		free(command);
