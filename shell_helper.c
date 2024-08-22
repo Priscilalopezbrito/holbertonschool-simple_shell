@@ -123,6 +123,13 @@ void exec_commands(char *command, char *prog_name)
 		token = strtok(NULL, delim);
 	}
 	args[i] = NULL; /*end of array*/
-	fork_execute(args, prog_name);
+	if (args[0] != NULL)
+	{
+		fork_execute(args, prog_name);
+	}
+	else
+	{
+		fprintf(stderr, "%s: Command not found\n", prog_name);
+	}
 }
 
