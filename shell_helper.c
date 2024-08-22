@@ -1,28 +1,24 @@
 #include "shell.h"
 /**
  * execute- execve
- * @command: command
+ * @args: command
  * @prog_name: name
  **/
-void execute(char *command, char *prog_name)
+void execute(char **args, char *prog_name)
 {
-	char *av[2];
-
-	av[0] = command;
-	av[1] = NULL;
-	if (execve(command, av, environ) == -1)/*13-16 add issaty to handle*/
+	if (execve(args[0], args, environ) == -1)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			fprintf(stderr, "%s: %s: ", prog_name, command);
-			perror("");
+			perror(prog_name);
 		}
 		else
 		{
-			perror(prog_name);
+			exit(EXIT_FAILURE);
 		}
 	}
 }
+
 
 /**
  * read_line- imput
@@ -42,8 +38,12 @@ char *read_line(void)
 	getinput = getline(&command, &len, stdin);
 	if (getinput == -1)
 	{
+		if (isatty(STDIN_FILENO))
+		{
+			printf("\n");
+		}
 		free(command);
-		return (NULL);
+		exit(0);
 	}
 	command[_strcspn(command, "\n")] = 0;
 	return (command);
@@ -51,10 +51,10 @@ char *read_line(void)
 
 /**
  * fork_execute- fork process
- * @command: command
+ * @args: command
  * @prog_name: program name
  **/
-void fork_execute(char *command, char *prog_name)
+void fork_execute(char **args, char *prog_name)
 {
 	pid_t pid;
 	int status;
@@ -63,14 +63,11 @@ void fork_execute(char *command, char *prog_name)
 	if (pid == -1)
 	{
 		perror("Error");
-		free(command);
 		return;
 	}
 	else if (pid == 0)/*child*/
 	{
-		execute(command, prog_name);
-		/*free(command);*/
-		exit(EXIT_FAILURE);
+		execute(args, prog_name);
 	}
 	else /*parent*/
 	{
@@ -101,3 +98,31 @@ size_t _strcspn(const char *s1, const char *s2)
 	}
 	return (ret);
 }
+
+/**
+ * exec_commands- handles multiple commands
+ * separated by spaces or newline
+ * @command: command
+ * @prog_name: name
+ */
+
+void exec_commands(char *command, char *prog_name)
+{
+	char *token;
+	char *delim = "\n ";
+	char *args[100];
+	int i = 0;
+
+	token = strtok(command, delim);
+	while (token != NULL)
+	{
+		if (strlen(token) > 0)
+		{
+			args[i++] = token;
+		}
+		token = strtok(NULL, delim);
+	}
+	args[i] = NULL; /*end of array*/
+	fork_execute(args, prog_name);
+}
+
