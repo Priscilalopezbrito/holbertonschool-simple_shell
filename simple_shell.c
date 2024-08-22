@@ -41,8 +41,8 @@ int main(int ac __attribute__((unused)), char **av)
 char *find_in_path(char *filename)
 {
 	char *token;
-	char full_path[1024];
-	char *path = getenv("PATH");
+	char full_path[BUFFER];
+	char *path = get_path_env();
 	char *path_copy = strdup(path);
 
 	if (path == NULL)
@@ -58,8 +58,8 @@ char *find_in_path(char *filename)
 	token = strtok(path_copy, ":");
 	while (token != NULL)
 	{
-		snprintf(full_path, sizeof(full_path), "%s/%s", token, filename);
-		if (access(full_path, F_OK) == 0)
+		sprintf(full_path, "%s/%s", token, filename);
+		if (access(full_path, X_OK) == 0)
 		{
 			free(path_copy);
 			return (strdup(full_path));
@@ -68,4 +68,18 @@ char *find_in_path(char *filename)
 	}
 	free(path_copy);
 	return (NULL);
+}
+
+char *get_path_env(void)
+{
+	char **env;
+
+	for (env = environ; *env != NULL; env++)
+	{
+		if (strncmp(*env, "PATH=", 5) == 0)
+		{
+			return (*env + 5);
+		}
+	}
+	return NULL;
 }
