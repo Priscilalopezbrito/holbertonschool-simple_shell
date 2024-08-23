@@ -1,9 +1,10 @@
 #include "shell.h"
+
 /**
- * execute- executes a command using execve
- * @args: command
- * @prog_name: name
- **/
+* execute- executes a command using execve
+* @args: command
+* @prog_name: name
+**/
 void execute(char **args, char *prog_name)
 {
 	/*execve executes the program pointed to by filename*/
@@ -25,14 +26,14 @@ void execute(char **args, char *prog_name)
 	}
 }
 
-
 /**
- * read_line- reads user input
- * Return: command
- **/
+* read_line- reads user input
+* Return: command
+**/
 char *read_line(void)
 {
 	char *command = NULL;
+
 	size_t len = 0;
 	ssize_t getinput;
 
@@ -64,10 +65,10 @@ char *read_line(void)
 }
 
 /**
- * fork_execute- fork process to execute command
- * @args: command
- * @prog_name: program name
- **/
+* fork_execute- fork process to execute command
+* @args: command
+* @prog_name: program name
+**/
 void fork_execute(char **args, char *prog_name)
 {
 	pid_t pid;
@@ -93,10 +94,34 @@ void fork_execute(char **args, char *prog_name)
 	}
 }
 
+/**
+* tokenize- Tokenizes a command string into
+* individual arguments using spaces or newlines as delimiters
+* @command: command
+* @args: array to store arguments
+* @argc:argc
+*/
+void tokenize(char *command, char **args, int *argc)
+{
+	char *token;
+	char *delim = "\n\t\r ";
+
+	token = strtok(command, delim);
+	while (token != NULL && *argc < 99)
+	{
+		if (strlen(token) > 0)
+		{
+			args[(*argc)++] = token;
+		}
+		token = strtok(NULL, delim);
+	}
+	args[*argc] = NULL;
+}
+
+
 
 /**
- * exec_commands- Tokenizes a command string into
- * individual arguments using spaces or newlines as delimiters
+ * exec_commands- parses and executes commands
  * @command: command
  * @prog_name: name
  */
@@ -124,26 +149,4 @@ void exec_commands(char *command, char *prog_name)
 	{
 		fprintf(stderr, "%s: command not found\n", args[0]);
 	}
-}
-
-/**
- * tokenize- tokenize srting
- * @args: args
- * @argc: cnt
- */
-void tokenize(char *command, char **args, int *argc)
-{
-	char *token;
-	char *delim = "\n\t\r ";
-
-	token = strtok(command, delim);
-	while (token != NULL && *argc < 99)
-	{
-		if (strlen(token) > 0)
-		{
-			args[(*argc)++] = token;
-		}
-		token = strtok(NULL, delim);
-	}
-	args[*argc] = NULL;
 }
