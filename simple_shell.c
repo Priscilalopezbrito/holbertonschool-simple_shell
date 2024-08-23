@@ -14,7 +14,7 @@ int main(int ac __attribute__((unused)), char **av)
 	while (1)/*infinite loop*/
 	{
 		command = read_line();/*read_line reads user input*/
-		if (command == NULL)/*EOF (Ctrl+D)*/
+		if (command == NULL)/*cecks EOF (Ctrl+D)*/
 		{
 			break;
 		}
@@ -40,7 +40,7 @@ int main(int ac __attribute__((unused)), char **av)
  */
 void print_env(void)
 {
-	char **env = environ;
+	char **env = environ; /* pointer to environment variables */
 
 	while (*env)
 	{

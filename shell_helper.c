@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
-* execute- executes a command using execve
+* execute- executes command using execve
 * @args: command
 * @prog_name: name
 **/
@@ -33,13 +33,12 @@ void execute(char **args, char *prog_name)
 char *read_line(void)
 {
 	char *command = NULL;
-
 	size_t len = 0;
 	ssize_t getinput;
 
 	if (isatty(STDIN_FILENO))
 	{
-		printf("#cisfun$ ");
+		printf("#cisfun$ ");/* Prompt*/
 		fflush(stdout);
 	}
 	/**
@@ -60,7 +59,7 @@ char *read_line(void)
 		free(command);
 		exit(0);
 	}
-	command[strcspn(command, "\n")] = 0;
+	command[strcspn(command, "\n")] = 0;/* removes newline */
 	return (command);
 }
 
@@ -74,7 +73,7 @@ void fork_execute(char **args, char *prog_name)
 	pid_t pid;
 	int status;
 
-	pid = fork();
+	pid = fork();/* create new process */
 	if (pid == -1)
 	{
 		perror("Error");
@@ -90,13 +89,13 @@ void fork_execute(char **args, char *prog_name)
 	}
 	else /*parent*/
 	{
-		waitpid(pid, &status, 0);
+		waitpid(pid, &status, 0);/* wait for child process to finish */
 	}
 }
 
 /**
 * tokenize- Tokenizes a command string into
-* individual arguments using spaces or newlines as delimiters
+* individual arguments using delimiters
 * @command: command
 * @args: array to store arguments
 * @argc:argc
@@ -111,11 +110,11 @@ void tokenize(char *command, char **args, int *argc)
 	{
 		if (strlen(token) > 0)
 		{
-			args[(*argc)++] = token;
+			args[(*argc)++] = token;/* Store token in args */
 		}
 		token = strtok(NULL, delim);
 	}
-	args[*argc] = NULL;
+	args[*argc] = NULL;/* NULL terminate argument list */
 }
 
 
@@ -137,12 +136,12 @@ void exec_commands(char *command, char *prog_name)
 	{
 		return;
 	}
-	builtin_commands(args, command);
-	path = command_path(args[0]);
+	builtin_commands(args, command);/* checks for built-in commands */
+	path = command_path(args[0]);/* get command path */
 	if (path != NULL)
 	{
 		args[0] = path;
-		fork_execute(args, prog_name);
+		fork_execute(args, prog_name);/* fork and execute command */
 		free(path);
 	}
 	else

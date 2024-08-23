@@ -15,7 +15,7 @@ char *_getenv(const char *name)
 	int i = 0;
 	size_t name_len = strlen(name);
 
-	while (environ[i])
+	while (environ[i])/* loop through environment list */
 	{
 		if (strncmp(environ[i], name, name_len) == 0 && environ[i][name_len] == '=')
 		{
@@ -37,7 +37,7 @@ char *find_in_path(char *filename)
 	char *token;
 	char full_path[1024];
 	char *path = _getenv("PATH");
-	char *path_copy;
+	char *path_copy;/*avoids direct modif env variables*/
 
 	if (path == NULL)
 	{
@@ -59,10 +59,10 @@ char *find_in_path(char *filename)
 		 * checks if the constructed path points to
 		 * an existing file
 		 */
-		if (access(full_path, F_OK) == 0)
+		if (access(full_path, F_OK) == 0)/* F_OK tests whether the file exists */
 		{
 			free(path_copy);
-			return (strdup(full_path));
+			return (strdup(full_path));/* return full path */
 		}
 		token = strtok(NULL, ":");
 	}
@@ -80,7 +80,7 @@ void builtin_commands(char **args, char *command)
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free(command);
-		exit(0);
+		exit(last_status);
 	}
 	else if (strcmp(args[0], "env") == 0)
 	{
@@ -90,7 +90,7 @@ void builtin_commands(char **args, char *command)
 }
 
 /**
- * command_path- command path
+ * command_path- checks relative, absolute path
  * @command: command
  * Return: char* path
  */
@@ -100,11 +100,11 @@ char *command_path(char *command)
 
 	if (command[0] != '/' && command[0] != '.')
 	{
-		path = find_in_path(command);
+		path = find_in_path(command);/* search in PATH */
 	}
 	else
 	{
-		path = strdup(command);
+		path = strdup(command); /* Use the provided path */
 	}
 	return (path);
 }
