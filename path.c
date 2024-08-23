@@ -80,7 +80,7 @@ void builtin_commands(char **args, char *command)
 	if (strcmp(args[0], "exit") == 0)
 	{
 		free(command);
-		exit(last_status);
+		exit(0);
 	}
 	else if (strcmp(args[0], "env") == 0)
 	{
