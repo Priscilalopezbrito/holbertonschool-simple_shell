@@ -13,7 +13,7 @@ int main(int ac __attribute__((unused)), char **av)
 
 	while (1)/*infinite loop*/
 	{
-		command = read_line();
+		command = read_line();/*read_line reads user input*/
 		if (command == NULL)/*EOF (Ctrl+D)*/
 		{
 			break;
@@ -23,9 +23,10 @@ int main(int ac __attribute__((unused)), char **av)
 			free(command);
 			continue;
 		}
-		exec_commands(command, av[0]);/* multiple commands */
+		exec_commands(command, av[0]);/* executes command(s) */
 		free(command);
 	}
+	/*isatty test whether a file descriptor refers to a terminal*/
 	if (isatty(STDIN_FILENO))
 	{
 		printf("\n");
@@ -37,8 +38,6 @@ int main(int ac __attribute__((unused)), char **av)
 /**
  * print_env- Prints environment variables
  */
-
-
 void print_env(void)
 {
 	char **env = environ;
@@ -47,20 +46,5 @@ void print_env(void)
 	{
 		printf("%s\n", *env);
 		env++;
-	}
-}
-
-/**
- * prepare_command - funcion
- * @args: args
- * @path: path
- */
-
-void prepare_command(char *args[], char *path)/**/
-{
-	if (strchr(args[0], '/') == NULL)
-	{
-		sprintf(path, "/bin/%s", args[0]);
-		args[0] = path;
 	}
 }

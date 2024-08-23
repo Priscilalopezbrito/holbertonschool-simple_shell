@@ -8,8 +8,6 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-#define MAX 100
-
 
 extern char **environ;
 void execute(char **args, char *prog_name);
@@ -18,7 +16,10 @@ void fork_execute(char **args, char *prog_name);
 void exec_commands(char *command, char *prog_name);
 void print_env(void);
 char *find_command(char *command);
-void exec_commands(char *command, char *prog_name);
-void prepare_command(char *args[], char *path);
+char *_getenv(const char *name);
+char *find_in_path(char *filename);
+void builtin_commands(char **args, char *command);
+char *command_path(char *command);
+void tokenize(char *command, char **args, int *argc);
 
 #endif

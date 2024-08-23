@@ -6,10 +6,16 @@
  **/
 void execute(char **args, char *prog_name)
 {
+	/*execve executes the program pointed to by filename*/
 	if (execve(args[0], args, environ) == -1)
 	{
+		/*isatty test whether a file descriptor refers to a terminal*/
 		if (isatty(STDIN_FILENO))
 		{
+			/**
+			 * perror print a descriptive error message
+			 * to the standard error stream (stderr)
+			 */
 			perror(prog_name);
 		}
 		else
@@ -35,8 +41,16 @@ char *read_line(void)
 		printf("#cisfun$ ");
 		fflush(stdout);
 	}
+	/**
+	 * getline():
+	 * &command: the address of the first character
+	 * position where the input string will be stored
+	 * &len: address of the variable that holds the
+	 * size of the input buffer
+	 * stdid: input file handle
+	 */
 	getinput = getline(&command, &len, stdin);
-	if (getinput == -1)
+	if (getinput == -1)/*handles input error*/
 	{
 		if (isatty(STDIN_FILENO))
 		{
@@ -67,7 +81,11 @@ void fork_execute(char **args, char *prog_name)
 	}
 	else if (pid == 0)/*child*/
 	{
-		execute(args, prog_name);
+		if (execve(args[0], args, environ) == -1)
+		{
+			perror(prog_name);
+			exit(EXIT_FAILURE);
+		}
 	}
 	else /*parent*/
 	{
@@ -85,37 +103,47 @@ void fork_execute(char **args, char *prog_name)
 
 void exec_commands(char *command, char *prog_name)
 {
-	char *token, *args[100];
-	char *delim = "\n\t\r ";
-	int argc = 0;
+	char *args[100];
 	char *path;
+	int argc = 0;
 
-	path = malloc(700 * sizeof(char));
-	if (path == NULL)
+	tokenize(command, args, &argc);
+	if (args[0] == NULL)
 	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
+		return;
 	}
+	builtin_commands(args, command);
+	path = command_path(args[0]);
+	if (path != NULL)
+	{
+		args[0] = path;
+		fork_execute(args, prog_name);
+		free(path);
+	}
+	else
+	{
+		fprintf(stderr, "%s: command not found\n", args[0]);
+	}
+}
+
+/**
+ * tokenize- tokenize srting
+ * @args: args
+ * @argc: cnt
+ */
+void tokenize(char *command, char **args, int *argc)
+{
+	char *token;
+	char *delim = "\n\t\r ";
+
 	token = strtok(command, delim);
-	while (token != NULL && argc < 99)
+	while (token != NULL && *argc < 99)
 	{
 		if (strlen(token) > 0)
 		{
-			args[argc++] = token;
+			args[(*argc)++] = token;
 		}
 		token = strtok(NULL, delim);
 	}
-	args[argc] = NULL;/*end of array*/
-	if (args[0] != NULL && strcmp(args[0], "exit") == 0)/**/
-	{
-		free(command);
-		free(path);
-		exit(0);
-	}
-	prepare_command(args, path);
-	if (args[0] != NULL)
-	{
-		fork_execute(args, prog_name);
-	}
-	free(path);
+	args[*argc] = NULL;
 }
